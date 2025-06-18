@@ -1,0 +1,11 @@
+APScheduler==3.10.4
+colorama==0.4.6
+discord.py==2.4.0
+humanfriendly==10.0
+mcstatus==12.0.1
+mysql-connector-python==9.0.0
+Pillow==11.2.1
+python-dotenv==1.1.0
+pytz==2024.1
+validators==0.33.0
+pyarmor==9.1.7

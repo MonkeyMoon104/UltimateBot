@@ -1,0 +1,10 @@
+- Install the .zip
+- Extract the .zip
+- Modify the code as you like
+- Set data/config.py well
+- Insert your custom images inside /images
+- Insert your favorite font inside /font
+- Default language Italian
+- After that everything is configured, select files and everything else and put it in your host
+- If you want to have more security run the .bat you will see various messages and at the end if everything works the bot starts automatically, this is an obfuscation process
+- Enter the obfuscated_out folder copy everything and import it into your host, done the bot works and is protected!

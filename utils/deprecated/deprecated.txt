@@ -1,0 +1,387 @@
+Parti di codici che non servono ma è un bene salvarsi:
+
+#def connect_to_database_mc():
+#    try:
+#        conn = mysql.connector.connect(
+#            host=HOST,
+#            port=PORT,
+#            user=USER,
+#            password=PASSWORD,
+#            database=DATABASE_SELECT,
+#            charset="utf8mb4",
+#            collation="utf8mb4_unicode_ci"
+#        )
+#        cursor = conn.cursor()
+#        cursor.execute('''
+#            CREATE TABLE IF NOT EXISTS mcds_connection (
+#                discord_name VARCHAR(255) PRIMARY KEY,
+#                minecraft_name VARCHAR(255) NOT NULL
+#            )
+#        ''')
+#        conn.commit()
+#        return conn
+#    except mysql.connector.Error as err:
+#        print(f"Errore nella connessione al database: {err}")
+#        return None
+
+#def add_connection(discord_name, minecraft_name):
+#    conn = connect_to_database_mc()
+#    if conn:
+#        cursor = conn.cursor()
+#        try:
+#            insert_query = """
+#                INSERT INTO mcds_connection (discord_name, minecraft_name)
+#                VALUES (%s, %s)
+#                ON DUPLICATE KEY UPDATE minecraft_name = VALUES(minecraft_name);
+#            """
+#            cursor.execute(insert_query, (discord_name, minecraft_name))
+#            conn.commit()
+#        except mysql.connector.Error as err:
+#            print(f"Errore nell'inserimento nel database: {err}")
+#        finally:
+#            cursor.close()
+#            conn.close()
+
+#def remove_connection(discord_name):
+#    conn = connect_to_database_mc()
+#    if conn:
+#        cursor = conn.cursor()
+#        try:
+#            delete_query = "DELETE FROM mcds_connection WHERE discord_name = %s"
+#            cursor.execute(delete_query, (discord_name,))
+#            conn.commit()
+#        except mysql.connector.Error as err:
+#            print(f"Errore durante la rimozione della connessione nel database: {err}")
+#        finally:
+#            cursor.close()
+#            conn.close()
+
+#def get_minecraft_name(discord_name):
+#    conn = connect_to_database_mc()
+#    if conn:
+#        cursor = conn.cursor()
+#        cursor.execute('''
+#            SELECT minecraft_name FROM mcds_connection
+#            WHERE discord_name = %s
+#        ''', (discord_name,))
+#        result = cursor.fetchone()
+#        conn.close()
+#        return result[0] if result else None
+
+#class Candidatura(app_commands.Group):
+#    ...
+#candidatura = Candidatura()
+
+#async def check_minecraft_connection(user):
+#    """Verifica se l'utente ha un nome Minecraft associato."""
+#    try:
+#        conn = connect_to_database_mc()
+#        if conn:
+#            cursor = conn.cursor()
+#            cursor.execute('''SELECT minecraft_name FROM mcds_connection WHERE discord_name = %s''', (user.name,))
+#            result = cursor.fetchone()
+#            conn.close()
+#            return result is not None, result[0] if result else None
+#        return False, None
+#    except Exception as e:
+#        print(f"Errore nel controllo della connessione Minecraft: {e}")
+#        return False, None
+
+#@client.tree.command(name="link", description="Collega un account Minecraft con Discord")
+#@app_commands.describe(
+#    discord_username="Nome dell'account Discord",
+#    minecraft_username="Nome dell'account Minecraft",
+#    proof="Prova del collegamento (immagine)"
+#)
+#async def link(interaction: discord.Interaction, discord_username: discord.Member, minecraft_username: str, proof: discord.Attachment):
+#    if not (interaction.user.guild_permissions.administrator or
+#            HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles] or
+#            ROLE_GESTORE_ACC_DISCORD in [role.name for role in interaction.user.roles]):
+#        await interaction.response.send_message("Non hai i permessi per usare questo comando", ephemeral=True)
+#        return
+#
+#    existing_minecraft_name = get_minecraft_name(discord_username.name)
+#    if existing_minecraft_name:
+#        await interaction.response.send_message(
+#            f"L'utente Discord '{discord_username}' è già collegato all'account Minecraft: '{existing_minecraft_name}'",
+#            ephemeral=True
+#        )
+#        return
+#
+#    add_connection(discord_username.name, minecraft_username)
+#
+#    try:
+#        await discord_username.edit(nick=minecraft_username)
+#    except discord.Forbidden:
+#        print("Non ho il permesso di cambiare i nick")
+#        pass
+#    
+#    embed = discord.Embed(
+#        title="Nuovo Collegamento Discord-Minecraft",
+#        description="Un nuovo collegamento è stato effettuato",
+#        color=discord.Color.green()
+#    )
+#    embed.add_field(name="Nome Discord", value=f"Tag: {discord_username.mention}\nDisplay name: {discord_username.name}", inline=True)
+#    embed.add_field(name="Nome Minecraft", value=minecraft_username, inline=True)
+#    embed.set_footer(icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM, text=f"Collegamento effettuato dallo staffer {interaction.user.name}")
+#    embed.set_image(url=proof.url)
+#    embed.set_thumbnail(url=ICONACROM)
+#    embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM)
+#    embed.timestamp = datetime.datetime.now(italy_timezone)
+#
+#    await interaction.response.send_message("Collegamento effettuato con successo!", ephemeral=True)
+#
+#    notification_channel = client.get_channel(ACCOUNT_DISCORD_NOTIFICATION_CHANNEL_ID)
+#    if notification_channel:
+#        await notification_channel.send(embed=embed)
+
+#@client.tree.command(name="link-remove", description="Rimuove la connessione tra un account Discord e Minecraft")
+#@app_commands.describe(discord_username="Nome dell'account Discord da scollegare")
+#async def link_remove(interaction: discord.Interaction, discord_username: discord.Member):
+#    if not (interaction.user.guild_permissions.administrator or
+#            HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles] or
+#            ROLE_GESTORE_ACC_DISCORD in [role.name for role in interaction.user.roles]):
+#        await interaction.response.send_message("Non hai i permessi per usare questo comando", ephemeral=True)
+#        return
+#
+#    existing_minecraft_name = get_minecraft_name(discord_username.name)
+#    if not existing_minecraft_name:
+#        await interaction.response.send_message(
+#            f"L'utente Discord '{discord_username.mention}' non ha alcun account Minecraft collegato",
+#            ephemeral=True
+#        )
+#        return
+#
+#    remove_connection(discord_username.name)
+#
+#    try:
+#        await discord_username.edit(nick=None)
+#    except discord.Forbidden:
+#        print("Non ho il permesso per cambiare nick")
+#        pass
+#    
+#    await interaction.response.send_message(
+#        f"Collegamento tra '{discord_username.mention}' e l'account Minecraft '{existing_minecraft_name}' rimosso con successo!",
+#        ephemeral=True
+#    )
+#
+#    embed = discord.Embed(
+#        title="Collegamento Discord-Minecraft Rimosso",
+#        description="Un collegamento è stato rimosso",
+#        color=discord.Color.red()
+#    )
+#    embed.add_field(name="Nome Discord", value=discord_username, inline=True)
+#    embed.add_field(name="Nome Minecraft", value=existing_minecraft_name, inline=True)
+#    embed.set_footer(icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM, text=f"Scollegamento effettuato dallo staffer {interaction.user.name}")
+#    embed.set_thumbnail(url=ICONACROM)
+#    embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM)
+#    embed.timestamp = datetime.datetime.now(italy_timezone)
+#
+#    notification_channel = client.get_channel(ACCOUNT_DISCORD_NOTIFICATION_CHANNEL_ID)
+#    if notification_channel:
+#        await notification_channel.send(embed=embed)
+
+#@client.tree.command(name="connections-check", description="Mostra tutte le connessioni Discord-Minecraft")
+#async def connections_check(interaction: discord.Interaction):
+#    if not (interaction.user.guild_permissions.administrator or HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles] or ROLE_GESTORE_ACC_DISCORD in [role.name for role in interaction.user.roles]):
+#        await interaction.response.send_message("Non hai i permessi per usare questo comando.", ephemeral=True)
+#        return
+#
+#    conn = connect_to_database_mc()
+#    if conn:
+#        cursor = conn.cursor()
+#        cursor.execute("SELECT discord_name, minecraft_name FROM mcds_connection")
+#        results = cursor.fetchall()
+#        cursor.close()
+#        conn.close()
+#
+#        if results:
+#            description = []
+#            for discord_name, minecraft_name in results:
+#                member = discord.utils.get(interaction.guild.members, name=discord_name)
+#                if member:
+#                    description.append(f"{member.mention} - `{minecraft_name}`")
+#                else:
+#                    description.append(f"{discord_name} (non trovato) - `{minecraft_name}`")
+#
+#            description_text = "\n".join(description)
+#
+#            if len(description_text) > 2000:
+#                with io.StringIO() as file:
+#                    file.write("Connessioni Discord-Minecraft:\n")
+#                    file.write(description_text)
+#                    file.seek(0)
+#                    await interaction.response.send_message(
+#                        "La lista delle connessioni è troppo lunga, ecco un file con tutte le connessioni:",
+#                        file=discord.File(file, filename="connessioni_discord_minecraft.txt")
+#                    )
+#            else:
+#                embed = discord.Embed(
+#                    title="Connessioni Discord-Minecraft",
+#                    description=description_text,
+#                    color=discord.Color.green()
+#                )
+#                embed.set_thumbnail(url=ICONACROM)
+#                embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM)
+#                embed.timestamp = datetime.datetime.now(italy_timezone)
+#                await interaction.response.send_message(embed=embed, delete_after=5)
+#        else:
+#            embed = discord.Embed(
+#                title="Connessioni Discord-Minecraft",
+#                description="Nessuna connessione trovata",
+#                color=discord.Color.red()
+#            )
+#            embed.set_thumbnail(url=ICONACROM)
+#            embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM)
+#            embed.timestamp = datetime.datetime.now(italy_timezone)
+#            await interaction.response.send_message(embed=embed, delete_after=5)
+
+#@client.tree.command(name="connect-check", description="Verifica se un utente Discord ha un account Minecraft collegato")
+#@app_commands.describe(discord_username="Nome dell'account Discord")
+#async def connect_check(interaction: discord.Interaction, discord_username: discord.Member):
+#    if not (interaction.user.guild_permissions.administrator or
+#            HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles] or
+#            ROLE_GESTORE_ACC_DISCORD in [role.name for role in interaction.user.roles]):
+#        await interaction.response.send_message("Non hai i permessi per usare questo comando.", ephemeral=True)
+#        return
+#    minecraft_name = get_minecraft_name(discord_username.name)
+#    
+#    if minecraft_name:
+#        embed = discord.Embed(
+#            title="Collegamento Trovato",
+#            description=f"{discord_username.mention} - `{minecraft_name}`",
+#            color=discord.Color.green()
+#        )
+#    else:
+#        embed = discord.Embed(
+#            title="Collegamento non trovato",
+#            description=f"L'utente Discord '{discord_username.mention}' non ha un account Minecraft collegato.",
+#            color=discord.Color.red()
+#        )
+#
+#    embed.set_thumbnail(url=ICONACROM)
+#    embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url if interaction.user.avatar else ICONACROM)
+#    embed.timestamp = datetime.datetime.now(italy_timezone)
+#
+#    await interaction.response.send_message(embed=embed, delete_after=3)
+
+#@candidatura.command(name="rifiutata", description="Invia un DM per comunicare il rifiuto di una candidatura")
+#@app_commands.describe(nome="Inserisci il nome dell'utente")
+#async def candidatura_rifiutata(interaction: discord.Interaction, nome: discord.Member):
+#
+#    # Controlla se l'utente ha il ruolo "manage-warn" o il permesso di amministratore
+#    if not (interaction.user.guild_permissions.administrator or HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles]):
+#        await interaction.response.send_message("❌ Non hai i permessi per eseguire questo comando.", ephemeral=True)
+#        return
+#    
+#    if interaction.channel_id != CHANNEL_CANDIDATURA_ID:
+#        # Ottieni l'oggetto del canale usando il suo ID
+#        channel = interaction.guild.get_channel(CHANNEL_CANDIDATURA_ID)
+#        await interaction.response.send_message(
+#            f"❌ Questo comando può essere eseguito solo nel canale {channel.mention}.", ephemeral=True
+#        )
+#        return
+#
+#    try:
+#        # Crea l'embed per il messaggio di rifiuto
+#        embed = discord.Embed(
+#            title="Candidatura Rifiutata <:nope:1277781706073440337>",
+#            description=(
+#                "Salve, ci dispiace ma la sua candidatura, dopo esser stata sottoposta a una "
+#                "dettagliata e accurata revisione da parte del nostro staff competente, "
+#                "è stata rifiutata. Se ha qualsiasi domanda apra un ticket nel nostro server Discord. "
+#                "Grazie per aver provato a fare candidatura su NeverCraft! <:NeverCraft:1275399079459033108>"
+#            ),
+#            color=discord.Color.red()
+#        )
+#        embed.set_thumbnail(url=ICONACROM)
+#        embed.set_image(url=ICONBANNER)
+#        embed.set_footer(text="Powered by Acrom", icon_url=ICONACROM)
+#
+#        # Invia il messaggio diretto (DM)
+#        await nome.send(embed=embed)
+#        await interaction.response.send_message(f"Messaggio di rifiuto inviato a {nome.mention}.", ephemeral=True)
+#        await interaction.followup.send(f"La candidatura di {nome.mention} è stata rifiutata da {interaction.user.mention}!")
+#    except Exception as e:
+#        await interaction.response.send_message(f"Non sono riuscito a inviare il DM a {nome.mention}: {e}", ephemeral=True)
+
+#@candidatura.command(name="accettata", description="Invia un DM per comunicare l'accettazione di una candidatura")
+#@app_commands.describe(nome="Inserisci il nome dell'utente")
+#async def candidatura_accettata(interaction: discord.Interaction, nome: discord.Member):
+#    # Controlla se l'utente ha il ruolo "manage-warn" o il permesso di amministratore
+#    if not (interaction.user.guild_permissions.administrator or HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles]):
+#        await interaction.response.send_message("❌ Non hai i permessi per eseguire questo comando.", ephemeral=True)
+#        return
+#
+#    if interaction.channel_id != CHANNEL_CANDIDATURA_ID:
+#        # Ottieni l'oggetto del canale usando il suo ID
+#        channel = interaction.guild.get_channel(CHANNEL_CANDIDATURA_ID)
+#        await interaction.response.send_message(
+#            f"❌ Questo comando può essere eseguito solo nel canale {channel.mention}.", ephemeral=True
+#        )
+#        return
+#
+#    try:
+#        # Crea l'embed per il messaggio di accettazione
+#        embed = discord.Embed(
+#            title="Candidatura Accettata <:ok:1277780662392197162>",
+#            description=(
+#                "Salve, siamo felici di annunciarle che la sua candidatura dopo esser stata "
+#                "sottoposta a una dettagliata e accurata revisione da parte del nostro staff competente, "
+#                "è stata accettata. Per procedere apra un ticket nel nostro server Discord. "
+#                "Grazie per aver fatto la candidatura su NeverCraft! <:NeverCraft:1275399079459033108>"
+#            ),
+#            color=discord.Color.green()
+#        )
+#        embed.set_thumbnail(url=ICONACROM)
+#        embed.set_image(url=ICONBANNER)
+#        embed.set_footer(text="Powered by Acrom", icon_url=ICONACROM)
+#
+#        # Invia il messaggio diretto (DM)
+#        await nome.send(embed=embed)
+#
+#        # Invia il messaggio di conferma
+#        await interaction.response.send_message(
+#            f"Messaggio di accettazione inviato a {nome.mention}. Sto creando un thread per ulteriori discussioni.",
+#            ephemeral=True
+#        )
+#
+#        await interaction.followup.send(f"La candidatura di {nome.mention} è stata accettata da {interaction.user.mention}, ed è stato creato un thread per completarla!")
+#
+#        # Crea il thread senza archiviazione automatica
+#        thread = await interaction.channel.create_thread(
+#            name=f"Discussione candidatura di {nome.display_name}",
+#            type=discord.ChannelType.public_thread  # Puoi cambiare a private_thread se desideri che sia privato
+#        )
+#
+#        # Invia il pulsante "Close" nel thread
+#        await thread.send(
+#            content="Questo thread rimarrà aperto finché non verrà chiuso manualmente. Premi 'Close' per chiuderlo.",
+#            view=CloseButtonThread()
+#        )
+#
+#    except discord.Forbidden:
+#        await interaction.followup.send(f"Non sono riuscito a inviare il DM a {nome.mention}. Probabilmente ha i DM chiusi.", ephemeral=True)
+#    except discord.HTTPException as e:
+#        await interaction.followup.send(f"Errore nella creazione del thread: {e}", ephemeral=True)
+#    except Exception as e:
+#        await interaction.followup.send(f"Si è verificato un errore imprevisto: {e}", ephemeral=True)
+
+
+# @client.tree.command(name="say", description="Invia un messaggio privato a un utente")
+# async def say(interaction: discord.Interaction):
+
+    # Controlla se l'utente ha il ruolo "manage-warn" o il permesso di amministratore
+    # if not (interaction.user.guild_permissions.administrator or STAFF_ROLE_ID in [role.id for role in interaction.user.roles]):
+        # await interaction.response.send_message("❌ Non hai i permessi per eseguire questo comando.", ephemeral=True)
+        # return
+    
+    # embed = discord.Embed(
+        # title="STORE",
+        # description="Visita il nostro store per comprare vantaggi, pacchetti e molte altre cose esclusive!",
+        # color=discord.Color(int("fdc92f", 16))
+    # )
+    # embed.set_thumbnail(url=ICONACROM)
+    # embed.set_image(url=ICONBANNER)
+    # embed.set_footer(text="NeverCraft", icon_url=ICONACROM)
+    # await interaction.channel.send(embed=embed, view=StoreView())
