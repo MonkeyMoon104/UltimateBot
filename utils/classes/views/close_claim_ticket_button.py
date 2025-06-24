@@ -30,7 +30,7 @@ class CloseClaimTicketButton(discord.ui.View):
         with open(file_name, "w", encoding="utf-8") as f:
             f.write(transcript_text)
 
-        log_channel = discord.utils.get(interaction.guild.text_channels, name=TRANSCRIPT_TICKET_CHANNEL)
+        log_channel = interaction.guild.get_channel(TRANSCRIPT_TICKET_CHANNEL)
         if log_channel:
             embed = discord.Embed(title="Ticket Chiuso", description=f"Ticket chiuso da {interaction.user.mention}", color=discord.Color.red())
             embed.set_thumbnail(url=ICONACROM)
@@ -66,7 +66,7 @@ class CloseClaimTicketButton(discord.ui.View):
     async def generate_transcript(self, channel, staff_role_name):
         transcript_text = ""
 
-        staff_role = discord.utils.get(channel.guild.roles, name=staff_role_name)
+        staff_role = channel.guild.get_role(staff_role_name)
 
         async for message in channel.history(limit=None, oldest_first=True):
             timestamp = message.created_at.strftime("%H:%M:%S %d %b %y")
