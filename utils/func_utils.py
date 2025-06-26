@@ -3,6 +3,7 @@ import os
 import discord
 import typing
 import importlib
+import asyncio
 from discord import app_commands
 from data.config import JSON_FILE_PATH, VOTI_FILE, ROLE_DEPX_ID, ICONACROM, CHANNEL_DEPEX_LOGS
 
@@ -135,3 +136,54 @@ async def load_context_menus(client):
 
                 if hasattr(module, "context_menu_command"):
                     client.tree.add_command(module.context_menu_command)
+
+async def remove_roles_in_batches(members, role, batch_size=20, delay=5):
+    success, errors = 0, 0
+
+    for i in range(0, len(members), batch_size):
+        batch = members[i:i+batch_size]
+        
+        coros = []
+        for member in batch:
+            if role in member.roles:
+                coros.append(member.remove_roles(role))
+            else:
+                pass
+        
+        results = await asyncio.gather(*coros, return_exceptions=True)
+
+        for r in results:
+            if isinstance(r, Exception):
+                errors += 1
+            else:
+                success += 1
+
+        await asyncio.sleep(delay)
+
+    return success, errors
+
+async def add_roles_in_batches(members, role, batch_size=20, delay=5):
+    success, errors = 0, 0
+
+    for i in range(0, len(members), batch_size):
+        batch = members[i:i+batch_size]
+        
+        coros = []
+        for member in batch:
+            if role not in member.roles:
+                coros.append(member.add_roles(role))
+            else:
+                pass
+        
+        results = await asyncio.gather(*coros, return_exceptions=True)
+
+        for r in results:
+            if isinstance(r, Exception):
+                errors += 1
+            else:
+                success += 1
+
+        await asyncio.sleep(delay)
+
+    return success, errors
+

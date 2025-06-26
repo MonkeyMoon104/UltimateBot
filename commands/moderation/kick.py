@@ -5,7 +5,7 @@ from data.config import ICONACROM
 @app_commands.command(name="kick", description="Espelli un utente")
 @app_commands.describe(member="Utente che vuoi kickare", reason="Motivo del kick")
 async def kick(interaction: discord.Interaction, member: discord.Member, *, reason: str):
-    await interaction.response.defer(ephemeral=True)  # Deferisce la risposta
+    await interaction.response.defer(ephemeral=True)
 
     if interaction.user.guild_permissions.kick_members or \
        interaction.user.guild_permissions.ban_members or \

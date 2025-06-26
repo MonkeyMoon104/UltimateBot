@@ -73,7 +73,6 @@ Parti di codici che non servono ma è un bene salvarsi:
 #candidatura = Candidatura()
 
 #async def check_minecraft_connection(user):
-#    """Verifica se l'utente ha un nome Minecraft associato."""
 #    try:
 #        conn = connect_to_database_mc()
 #        if conn:
@@ -269,13 +268,11 @@ Parti di codici che non servono ma è un bene salvarsi:
 #@app_commands.describe(nome="Inserisci il nome dell'utente")
 #async def candidatura_rifiutata(interaction: discord.Interaction, nome: discord.Member):
 #
-#    # Controlla se l'utente ha il ruolo "manage-warn" o il permesso di amministratore
 #    if not (interaction.user.guild_permissions.administrator or HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles]):
 #        await interaction.response.send_message("❌ Non hai i permessi per eseguire questo comando.", ephemeral=True)
 #        return
 #    
 #    if interaction.channel_id != CHANNEL_CANDIDATURA_ID:
-#        # Ottieni l'oggetto del canale usando il suo ID
 #        channel = interaction.guild.get_channel(CHANNEL_CANDIDATURA_ID)
 #        await interaction.response.send_message(
 #            f"❌ Questo comando può essere eseguito solo nel canale {channel.mention}.", ephemeral=True
@@ -283,7 +280,6 @@ Parti di codici che non servono ma è un bene salvarsi:
 #        return
 #
 #    try:
-#        # Crea l'embed per il messaggio di rifiuto
 #        embed = discord.Embed(
 #            title="Candidatura Rifiutata <:nope:1277781706073440337>",
 #            description=(
@@ -298,7 +294,6 @@ Parti di codici che non servono ma è un bene salvarsi:
 #        embed.set_image(url=ICONBANNER)
 #        embed.set_footer(text="Powered by Acrom", icon_url=ICONACROM)
 #
-#        # Invia il messaggio diretto (DM)
 #        await nome.send(embed=embed)
 #        await interaction.response.send_message(f"Messaggio di rifiuto inviato a {nome.mention}.", ephemeral=True)
 #        await interaction.followup.send(f"La candidatura di {nome.mention} è stata rifiutata da {interaction.user.mention}!")
@@ -308,13 +303,11 @@ Parti di codici che non servono ma è un bene salvarsi:
 #@candidatura.command(name="accettata", description="Invia un DM per comunicare l'accettazione di una candidatura")
 #@app_commands.describe(nome="Inserisci il nome dell'utente")
 #async def candidatura_accettata(interaction: discord.Interaction, nome: discord.Member):
-#    # Controlla se l'utente ha il ruolo "manage-warn" o il permesso di amministratore
 #    if not (interaction.user.guild_permissions.administrator or HEADSTAFF_ROLE_ID in [role.id for role in interaction.user.roles]):
 #        await interaction.response.send_message("❌ Non hai i permessi per eseguire questo comando.", ephemeral=True)
 #        return
 #
 #    if interaction.channel_id != CHANNEL_CANDIDATURA_ID:
-#        # Ottieni l'oggetto del canale usando il suo ID
 #        channel = interaction.guild.get_channel(CHANNEL_CANDIDATURA_ID)
 #        await interaction.response.send_message(
 #            f"❌ Questo comando può essere eseguito solo nel canale {channel.mention}.", ephemeral=True
@@ -322,7 +315,6 @@ Parti di codici che non servono ma è un bene salvarsi:
 #        return
 #
 #    try:
-#        # Crea l'embed per il messaggio di accettazione
 #        embed = discord.Embed(
 #            title="Candidatura Accettata <:ok:1277780662392197162>",
 #            description=(
@@ -337,10 +329,8 @@ Parti di codici che non servono ma è un bene salvarsi:
 #        embed.set_image(url=ICONBANNER)
 #        embed.set_footer(text="Powered by Acrom", icon_url=ICONACROM)
 #
-#        # Invia il messaggio diretto (DM)
 #        await nome.send(embed=embed)
 #
-#        # Invia il messaggio di conferma
 #        await interaction.response.send_message(
 #            f"Messaggio di accettazione inviato a {nome.mention}. Sto creando un thread per ulteriori discussioni.",
 #            ephemeral=True
@@ -348,13 +338,11 @@ Parti di codici che non servono ma è un bene salvarsi:
 #
 #        await interaction.followup.send(f"La candidatura di {nome.mention} è stata accettata da {interaction.user.mention}, ed è stato creato un thread per completarla!")
 #
-#        # Crea il thread senza archiviazione automatica
 #        thread = await interaction.channel.create_thread(
 #            name=f"Discussione candidatura di {nome.display_name}",
-#            type=discord.ChannelType.public_thread  # Puoi cambiare a private_thread se desideri che sia privato
+#            type=discord.ChannelType.public_thread
 #        )
 #
-#        # Invia il pulsante "Close" nel thread
 #        await thread.send(
 #            content="Questo thread rimarrà aperto finché non verrà chiuso manualmente. Premi 'Close' per chiuderlo.",
 #            view=CloseButtonThread()
@@ -371,7 +359,6 @@ Parti di codici che non servono ma è un bene salvarsi:
 # @client.tree.command(name="say", description="Invia un messaggio privato a un utente")
 # async def say(interaction: discord.Interaction):
 
-    # Controlla se l'utente ha il ruolo "manage-warn" o il permesso di amministratore
     # if not (interaction.user.guild_permissions.administrator or STAFF_ROLE_ID in [role.id for role in interaction.user.roles]):
         # await interaction.response.send_message("❌ Non hai i permessi per eseguire questo comando.", ephemeral=True)
         # return
