@@ -11,20 +11,19 @@ def create_welcome_image(member):
     background = Image.open(BACKGROUND_PATH).convert("RGBA")
 
     try:
-        font = ImageFont.truetype(FONT_PATH, 110)  # Font più grande
+        font = ImageFont.truetype(FONT_PATH, 110)
     except IOError:
         font = ImageFont.load_default()
 
     draw = ImageDraw.Draw(background)
     username = member.name
-    text_color = hex_to_rgb("#FFD700")  # Giallo oro
+    text_color = hex_to_rgb("#FFD700")
 
-    # Ottieni avatar e rendilo rotondo
     avatar_url = member.display_avatar.replace(static_format="png", size=512).url
     response = requests.get(avatar_url)
     avatar_image = Image.open(BytesIO(response.content)).convert("RGBA")
 
-    avatar_size = (320, 320)  # Ancora più grande
+    avatar_size = (320, 320)
     avatar_image = avatar_image.resize(avatar_size)
     mask = Image.new("L", avatar_size, 0)
     draw_mask = ImageDraw.Draw(mask)
@@ -36,12 +35,11 @@ def create_welcome_image(member):
     avatar_y = int(bg_h * 0.2)
     background.paste(avatar_image, (avatar_x, avatar_y), avatar_image)
 
-    # Testo in basso centrato
     bbox = draw.textbbox((0, 0), username, font=font)
     text_width = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]
     text_x = (bg_w - text_width) // 2
-    text_y = bg_h - text_height - 80  # Più in basso
+    text_y = bg_h - text_height - 80
 
     draw.text((text_x, text_y), username, font=font, fill=text_color)
 
