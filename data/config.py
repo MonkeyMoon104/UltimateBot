@@ -13,6 +13,8 @@ PASSWORD = ""
 DATABASE_SELECT = ""
 MAX_WARNS = 3
 
+DB_APPLY_PATH = "availability.db"
+
 ICONACROM = ""
 ICONBANNER = ""
 

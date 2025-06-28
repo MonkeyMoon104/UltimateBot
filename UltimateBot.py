@@ -22,6 +22,9 @@ from utils.classes.views.store_view import StoreView
 from utils.classes.views.voto_view import VotoView
 from utils.classes.views.invite_view import InviteView
 from utils.classes.views.suggestion_view import SuggestionButtons
+from utils.classes.views.apply.availability_buttons import AvailabilityButtons
+from utils.classes.views.apply.availability_notifier import AvailabilityNotifier
+
 
 load_dotenv()
 print("Caricando le variabili...")
@@ -43,6 +46,7 @@ async def on_ready():
     print(Fore.YELLOW + "------")
 
     setup_tasks(client)
+    apply_init_db()
     print(Fore.GREEN + "Task entrate in funzione")
     print(Fore.YELLOW + "------")   
 
@@ -65,6 +69,10 @@ async def on_ready():
     client.add_view(VotoView())
     client.add_view(InviteView())
     client.add_view(SuggestionButtons())
+    client.add_view(AvailabilityButtons())
+
+    AvailabilityNotifier(client)
+
     await load_commands(client)
     await load_context_menus(client)
     synced = await client.tree.sync()
