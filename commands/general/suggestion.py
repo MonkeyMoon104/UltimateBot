@@ -3,7 +3,7 @@ from discord import app_commands
 from data.config import *
 import pytz
 import datetime
-from utils.classes.views.suggestion_view import SuggestionButtons
+from utils.classes.views.suggestion.suggestion_view import SuggestionButtons
 from utils.func_utils import carica_dati_voti, salva_dati_voti
 
 voti_suggerimenti = carica_dati_voti()

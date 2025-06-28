@@ -1,6 +1,6 @@
 import discord
 from discord import app_commands
-from utils.classes.views.ticket_button_setup import TicketButtonSetup
+from utils.classes.views.ticket.buttons.setup.ticket_button_setup import TicketButtonSetup
 from data.config import ICONACROM, HEADSTAFF_ROLE_ID
 
 
