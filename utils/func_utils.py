@@ -4,8 +4,9 @@ import discord
 import typing
 import importlib
 import asyncio
+import sqlite3
 from discord import app_commands
-from data.config import JSON_FILE_PATH, VOTI_FILE, ROLE_DEPX_ID, ICONACROM, CHANNEL_DEPEX_LOGS
+from data.config import JSON_FILE_PATH, VOTI_FILE, ROLE_DEPX_ID, ICONACROM, CHANNEL_DEPEX_LOGS, DB_APPLY_PATH
 
 def initialize_json_file():
     if not os.path.isfile(JSON_FILE_PATH):
@@ -186,4 +187,66 @@ async def add_roles_in_batches(members, role, batch_size=20, delay=5):
         await asyncio.sleep(delay)
 
     return success, errors
+
+def apply_init_db():
+    conn = sqlite3.connect(DB_APPLY_PATH)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS provini (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            author_id INTEGER NOT NULL,
+            channel_id INTEGER NOT NULL,
+            giorno TEXT NOT NULL,
+            ora TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+def apply_save_availability(user_id: int, author_id: int, channel_id: int, giorno: str, ora: str):
+    conn = sqlite3.connect(DB_APPLY_PATH)
+    c = conn.cursor()
+    c.execute(
+        "INSERT INTO provini (user_id, author_id, channel_id, giorno, ora) VALUES (?, ?, ?, ?, ?)",
+        (user_id, author_id, channel_id, giorno, ora)
+    )
+    conn.commit()
+    conn.close()
+
+def apply_get_matches(giorno: str, ora: str):
+    conn = sqlite3.connect(DB_APPLY_PATH)
+    c = conn.cursor()
+    c.execute("SELECT id, user_id, author_id, channel_id FROM provini WHERE giorno = ? AND ora = ?", (giorno, ora))
+    risultati = c.fetchall()
+    conn.close()
+    return risultati
+
+def apply_delete_availability(provino_id: int):
+    conn = sqlite3.connect(DB_APPLY_PATH)
+    c = conn.cursor()
+    c.execute("DELETE FROM provini WHERE id = ?", (provino_id,))
+    conn.commit()
+    conn.close()
+
+def lista_tutti_i_provini():
+    conn = sqlite3.connect(DB_APPLY_PATH)
+    c = conn.cursor()
+    c.execute("SELECT id, user_id, author_id, channel_id, giorno, ora FROM provini")
+    risultati = c.fetchall()
+    conn.close()
+    return risultati
+
+
+def traduci_giorno(english_day: str):
+    giorni = {
+        "Monday": "Lunedì",
+        "Tuesday": "Martedì",
+        "Wednesday": "Mercoledì",
+        "Thursday": "Giovedì",
+        "Friday": "Venerdì",
+        "Saturday": "Sabato",
+        "Sunday": "Domenica"
+    }
+    return giorni.get(english_day, english_day)
 
