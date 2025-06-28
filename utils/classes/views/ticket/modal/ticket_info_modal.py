@@ -2,8 +2,8 @@ import discord
 import pytz
 import datetime
 from data.config import *
-from utils.classes.views.channels_ticket_link import ChannelsTicketLink
-from utils.classes.views.close_claim_ticket_button import CloseClaimTicketButton
+from utils.classes.views.ticket.link.channels_ticket_link import ChannelsTicketLink
+from utils.classes.views.ticket.buttons.general.close_claim_ticket_button import CloseClaimTicketButton
 
 italy_timezone = pytz.timezone('Europe/Rome')
 

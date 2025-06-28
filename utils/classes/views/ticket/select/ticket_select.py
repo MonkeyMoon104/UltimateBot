@@ -1,6 +1,6 @@
 import discord
 
-from utils.classes.views.ticket_info_modal import TicketInfoModal
+from utils.classes.views.ticket.modal.ticket_info_modal import TicketInfoModal
 from data.config import *
 
 class TicketSelect(discord.ui.Select):

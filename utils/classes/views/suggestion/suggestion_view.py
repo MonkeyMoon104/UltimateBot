@@ -2,6 +2,7 @@ import discord
 
 from data.config import *
 from utils.func_utils import carica_dati_voti, salva_dati_voti
+from utils.classes.views.suggestion.link.suggestion_link import SuggestionLink
 
 class SuggestionButtons(discord.ui.View):
     def __init__(self):
@@ -118,9 +119,3 @@ class SuggestionButtons(discord.ui.View):
             thread = interaction.guild.get_thread(thread_id)
             if thread:
                 await thread.delete(reason="Suggestion chiusa!")
-
-class SuggestionLink(discord.ui.View):
-    def __init__(self, url_link: str):
-        super().__init__()
-        self.url_link = url_link
-        self.add_item(discord.ui.Button(label="Suggestion", url=url_link, emoji="💡"))
