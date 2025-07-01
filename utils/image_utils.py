@@ -1,7 +1,7 @@
-from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw
 import requests
-from data.config import BACKGROUND_PATH, FONT_PATH
+from io import BytesIO
+from data.config import *
 
 def hex_to_rgb(hex_color):
     hex_color = hex_color.lstrip('#')

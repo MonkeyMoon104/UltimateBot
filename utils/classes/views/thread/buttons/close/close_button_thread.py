@@ -1,5 +1,4 @@
-import discord
-from utils.classes.views.thread.buttons.delete.delete_button_view import DeleteButtonView
+from utils.library.libs import *
 
 class CloseButtonThread(discord.ui.View):
     def __init__(self):

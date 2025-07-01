@@ -1,8 +1,7 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
-from utils.db_utils import connect_to_database
-from utils.func_utils import depex_staff
 from data.config import MANAGE_WARN_ROLE_ID, STAFF_ROLE_ID, ICONACROM
+from utils.func_utils import depex_staff
 
 class WarnStaffCommand(app_commands.Command):
     def __init__(self):

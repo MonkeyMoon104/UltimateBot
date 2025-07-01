@@ -1,7 +1,6 @@
-import discord
-from discord import app_commands
+from utils.library.libs import *
 from data.config import *
-from utils.classes.views.roleselection.role_selection_view import RoleSelectionView
+from discord import app_commands
 
 @app_commands.command(name="ruoli", description="Seleziona i ruoli")
 async def ruoli(interaction: discord.Interaction):

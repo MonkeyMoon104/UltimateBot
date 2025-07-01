@@ -1,3 +1,4 @@
+from utils.library.libs import *
 from discord import app_commands
 from .rall_all import rall_all
 from .rall_bot import rall_bot

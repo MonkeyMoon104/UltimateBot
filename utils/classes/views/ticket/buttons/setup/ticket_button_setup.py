@@ -1,6 +1,5 @@
-import discord
-from data.config import ICONBANNER
-from utils.classes.views.ticket.select.ticket_select import TicketSelectView
+from utils.library.libs import *
+from data.config import *
 
 class TicketButtonSetup(discord.ui.View):
     def __init__(self) -> None:

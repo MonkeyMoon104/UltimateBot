@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
 
 class PauseCommand(app_commands.Command):

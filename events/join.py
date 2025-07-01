@@ -1,6 +1,5 @@
-import discord
+from utils.library.libs import *
 from data.config import WELCOME_CHANNEL_ID, GUILD_ID, WELCOME_RULE_CHANNEL_ID
-from utils.image_utils import create_welcome_image
 
 async def handle_member_join(member: discord.Member, client: discord.Client):
     image_buffer = create_welcome_image(member)

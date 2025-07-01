@@ -1,8 +1,6 @@
-import discord
-from discord import app_commands, utils as Utils
+from utils.library.libs import *
 from data.config import ICONACROM
-from humanfriendly import parse_timespan, InvalidTimespan, format_timespan
-from datetime import timedelta
+from discord import app_commands
 
 @app_commands.command(name="timeout", description="Metti in timeout un utente")
 @app_commands.describe(member="Utente da mettere in timeout", time="Durata timeout (es. 2m, 1h, 1d)", reason="Motivo del timeout")

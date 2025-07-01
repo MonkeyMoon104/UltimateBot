@@ -1,8 +1,5 @@
-import discord
-
-from data.config import *
-from utils.func_utils import carica_dati_voti, salva_dati_voti
-from utils.classes.views.suggestion.link.suggestion_link import SuggestionLink
+from utils.library.libs import *
+from utils.func_utils import *
 
 class SuggestionButtons(discord.ui.View):
     def __init__(self):

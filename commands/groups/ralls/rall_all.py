@@ -1,7 +1,7 @@
-import discord
+from utils.library.libs import *
+from data.config import ICONACROM, HEADSTAFF_ROLE_ID
 from discord import app_commands
 from utils.func_utils import remove_roles_in_batches
-from data.config import ICONACROM, HEADSTAFF_ROLE_ID
 
 @app_commands.command(name="all", description="Rimuove il ruolo specificato da tutti i membri del server")
 @app_commands.describe(role="Ruolo da rimuovere a tutti gli utenti")

@@ -1,7 +1,6 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
 from data.config import ICONACROM
-from utils.classes.views.apply.availability_buttons import AvailabilityButtons
 
 @app_commands.command(name="apply_availability", description="Invia un template con le disponibilità per un provino")
 @app_commands.describe(

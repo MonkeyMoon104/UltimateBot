@@ -1,5 +1,5 @@
-import mysql.connector
-from data.config import HOST, PORT, USER, PASSWORD, DATABASE_SELECT, MAX_WARNS
+from utils.library.libs import mysql
+from data.config import *
 
 def connect_to_database():
     try:

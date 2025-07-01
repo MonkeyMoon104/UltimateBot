@@ -1,10 +1,7 @@
-import discord
-from discord import app_commands
-import datetime
-from collections import deque
-from zoneinfo import ZoneInfo
-from utils.func_utils import SONG_QUEUES, search_ytdlp_async, play_next_song
+from utils.library.libs import *
 from data.config import TMZ
+from discord import app_commands
+from utils.func_utils import *
 
 class PlayCommand(app_commands.Command):
     def __init__(self):

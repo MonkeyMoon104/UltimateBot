@@ -1,5 +1,4 @@
-import discord
-import re
+from utils.library.libs import *
 from utils.func_utils import apply_save_availability
 
 class AvailabilityModal(discord.ui.Modal, title="Conferma Orario Disponibilità"):

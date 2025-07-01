@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 
 class ChannelsTicketLink(discord.ui.View):
     def __init__(self, server_id: str, channel_id: str):

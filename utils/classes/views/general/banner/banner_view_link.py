@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 
 class BannerViewLink(discord.ui.View):
     def __init__(self, banner_link: str):

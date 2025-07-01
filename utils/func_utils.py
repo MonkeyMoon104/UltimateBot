@@ -1,14 +1,7 @@
-import json
-import os
-import discord
-import typing
-import importlib
-import asyncio
-import sqlite3
+from utils.library.libs import os, json, discord, typing, importlib, asyncio, sqlite3, yt_dlp
 from collections import deque
-import yt_dlp
 from discord import app_commands
-from data.config import JSON_FILE_PATH, VOTI_FILE, ROLE_DEPX_ID, ICONACROM, CHANNEL_DEPEX_LOGS, DB_APPLY_PATH
+from data.config import *
 
 SONG_QUEUES = {}
 

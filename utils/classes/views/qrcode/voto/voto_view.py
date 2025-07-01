@@ -1,7 +1,4 @@
-import discord
-import validators
-import qrcode
-import io
+from utils.library.libs import *
 from data.config import *
 
 class VotoView(discord.ui.View):

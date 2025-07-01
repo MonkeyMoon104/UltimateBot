@@ -1,8 +1,5 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
-import validators
-import qrcode
-import io
 
 @app_commands.command(name='qrcode', description='Generate a QR code for the provided link')
 @app_commands.describe(url="The URL of the site for which you want to generate a QR code")

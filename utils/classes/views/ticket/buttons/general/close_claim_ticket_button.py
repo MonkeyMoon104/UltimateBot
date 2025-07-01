@@ -1,7 +1,4 @@
-import discord
-import os
-import asyncio
-import re
+from utils.library.libs import *
 from data.config import *
 
 class CloseClaimTicketButton(discord.ui.View):

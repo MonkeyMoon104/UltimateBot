@@ -1,6 +1,6 @@
-import discord
-from discord import app_commands
+from utils.library.libs import *
 from data.config import ICONACROM, HEADSTAFF_ROLE_ID
+from discord import app_commands
 
 @app_commands.command(name="bot", description="Aggiunge il ruolo specificato a tutti i bot del server")
 @app_commands.describe(role="Ruolo che vuoi assegnare a tutti i bot del server")

@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
 
 @app_commands.command(name="avatar", description="Show the user's avatar")

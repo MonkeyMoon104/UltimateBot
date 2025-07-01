@@ -1,7 +1,6 @@
-import discord
-from discord import app_commands
+from utils.library.libs import *
 from data.config import *
-from utils.classes.views.general.profile.profile_view_links import ProfileViewLinks
+from discord import app_commands
 
 @app_commands.context_menu(name="See Profile")
 async def see_profile(interaction: discord.Interaction, member: discord.Member):

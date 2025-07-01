@@ -1,7 +1,6 @@
-import discord
-from discord import app_commands
+from utils.library.libs import *
 from data.config import ICONACROM
-from utils.classes.views.verification.verification_view import VerificationView
+from discord import app_commands
 
 @app_commands.command(name="verification", description="Invia il messaggio di verifica con bottone")
 async def verification(interaction: discord.Interaction, channel: discord.TextChannel = None):

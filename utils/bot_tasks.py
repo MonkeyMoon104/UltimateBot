@@ -1,5 +1,5 @@
-import discord
 from discord.ext import tasks
+import discord
 from mcstatus import JavaServer
 from data.config import *
 

@@ -1,9 +1,6 @@
-import discord
-from discord import app_commands
+from utils.library.libs import *
 from data.config import *
-import pytz
-import datetime
-from utils.classes.views.suggestion.suggestion_view import SuggestionButtons
+from discord import app_commands
 from utils.func_utils import carica_dati_voti, salva_dati_voti
 
 voti_suggerimenti = carica_dati_voti()

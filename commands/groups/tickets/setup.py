@@ -1,7 +1,7 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
-from utils.classes.views.ticket.buttons.setup.ticket_button_setup import TicketButtonSetup
 from data.config import ICONACROM, HEADSTAFF_ROLE_ID
+from discord import app_commands
 
 
 class SetupCommand(app_commands.Command):

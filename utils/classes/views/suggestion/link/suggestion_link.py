@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 
 class SuggestionLink(discord.ui.View):
     def __init__(self, url_link: str):

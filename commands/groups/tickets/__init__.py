@@ -1,3 +1,4 @@
+from utils.library.libs import *
 from discord import app_commands
 from .setup import SetupCommand
 from .purge import PurgeCommand

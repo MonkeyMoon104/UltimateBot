@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 from data.config import *
 
 class VerificationView(discord.ui.View):

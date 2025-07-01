@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 
 class AvatarViewLink(discord.ui.View):
     def __init__(self, avatar_link: str):

@@ -1,4 +1,4 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
 
 class SkipCommand(app_commands.Command):

@@ -1,6 +1,5 @@
-import discord
+from utils.library.libs import *
 from discord import app_commands
-from utils.db_utils import connect_to_database
 from data.config import STAFF_ROLE_ID, ICONACROM
 
 class CheckWarningsCommand(app_commands.Command):

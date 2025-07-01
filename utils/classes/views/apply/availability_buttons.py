@@ -1,5 +1,4 @@
-import discord
-from utils.classes.views.apply.availability_modal import AvailabilityModal
+from utils.library.libs import *
 
 class AvailabilityButtons(discord.ui.View):
     def __init__(self):
