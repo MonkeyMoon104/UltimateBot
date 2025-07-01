@@ -5,8 +5,12 @@ import typing
 import importlib
 import asyncio
 import sqlite3
+from collections import deque
+import yt_dlp
 from discord import app_commands
 from data.config import JSON_FILE_PATH, VOTI_FILE, ROLE_DEPX_ID, ICONACROM, CHANNEL_DEPEX_LOGS, DB_APPLY_PATH
+
+SONG_QUEUES = {}
 
 def initialize_json_file():
     if not os.path.isfile(JSON_FILE_PATH):
@@ -249,4 +253,39 @@ def traduci_giorno(english_day: str):
         "Sunday": "Domenica"
     }
     return giorni.get(english_day, english_day)
+
+async def search_ytdlp_async(query, ydl_opts):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, lambda: _extract(query, ydl_opts))
+
+def _extract(query, ydl_opts):
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        return ydl.extract_info(query, download=False)
+    
+async def play_next_song(voice_client, guild_id, channel, client):
+    if SONG_QUEUES.get(guild_id) and SONG_QUEUES[guild_id]:
+        audio_url, title = SONG_QUEUES[guild_id].popleft()
+
+        ffmpeg_options = {
+            "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+            "options": "-vn -b:a 96k -bufsize 128k",
+        }
+
+        source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="bin\\ffmpeg\\ffmpeg.exe")
+
+        def after_play(error):
+            if error:
+                print(f"Error playing {title}: {error}")
+            asyncio.run_coroutine_threadsafe(
+                play_next_song(voice_client, guild_id, channel, client), client.loop
+            )
+
+        voice_client.play(source, after=after_play)
+
+        await channel.send(f"▶️ Ora in riproduzione: **{title}**")
+
+    else:
+        if voice_client.is_connected():
+            await voice_client.disconnect()
+        SONG_QUEUES[guild_id] = deque()
 

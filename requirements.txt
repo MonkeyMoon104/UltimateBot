@@ -9,3 +9,5 @@ python-dotenv==1.1.0
 pytz==2024.1
 validators==0.33.0
 pyarmor==9.1.7
+yt_dlp==2025.6.30
+asyncio==3.4.3
